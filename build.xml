@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+
+<!-- 
+    This template is designed for trying out PulpCore quickly without creating 
+    a directory structure for a full project.
+-->
+<project name="base" default="jar" basedir=".">
+
+	<property name="server.jar" value="base.jar" />
+
+	<property name="pulpcore.build" value="release" />
+	<property name="pulpcore.version" value="0.11" />
+	<property name="pulpcore.platform" value="applet" />
+
+	<!-- additional paths -->
+	<property name="pulpcore.path" value="lib" />
+	<property name="mina.jar.file" value="${pulpcore.path}/mina-core.jar" />
+	<property name="mina_integration.jar.file" value="${pulpcore.path}/mina-integration-jmx.jar" />
+	<property name="slfj4.jar.file" value="${pulpcore.path}/slf4j-api.jar" />
+	<property name="google-collection.jar.file" value="${pulpcore.path}/google-collect.jar" />
+	<property name="spring-beans.jar.file" value="${pulpcore.path}/spring-beans.jar" />
+	<property name="spring-core.jar.file" value="${pulpcore.path}/spring-core.jar" />
+	<property name="spring-jdbc.jar.file" value="${pulpcore.path}/spring-jdbc.jar" />
+	<property name="spring-tx.jar.file" value="${pulpcore.path}/spring-tx.jar" />
+	<property name="commons-dbcp.jar.file" value="${pulpcore.path}/commons-dbcp.jar" />
+	<property name="commons-pool.jar.file" value="${pulpcore.path}/commons-pool.jar" />
+	<property name="jogg.jar.file" value="${pulpcore.path}/jogg.jar" />
+	<property name="jorbis.jar.file" value="${pulpcore.path}/jorbis.jar" />
+	<property name="core.jar.file" value="${pulpcore.path}/pulpcore-${pulpcore.platform}-${pulpcore.build}-${pulpcore.version}.jar" />
+
+	<!-- Project paths -->
+	<property name="src" value="src" />
+	<property name="build" value="build/" />
+	<property name="build.temp" value="${build}/temp" />
+	<property name="build.classes" value="${build.temp}/classes" />
+	<property name="build.res" value="${build.temp}" />
+
+	<target name="clean" description="Deletes builds, compiled classes, and processed assets">
+		<delete dir="${build}" />
+	</target>
+
+	<!-- Deletes the temporary build path -->
+	<target name="clean-temp">
+		<delete dir="${build.temp}" />
+	</target>
+
+	<!-- Compiles the code -->
+	<target name="compile">
+		<delete dir="${build.classes}" failonerror="false" />
+		<mkdir dir="${build}" />
+		<mkdir dir="${build.temp}" />
+		<mkdir dir="${build.classes}" />
+		<mkdir dir="${build.res}" />
+
+		<javac destdir="${build.classes}" source="5" target="5" debug="on" deprecation="on">
+			<src path="${src}" />
+			<classpath path="${core.jar.file}" />
+			<classpath path="${slfj4.jar.file}" />
+
+			<classpath path="${mina.jar.file}" />
+			<classpath path="${mina_integration.jar.file}" />
+			<classpath path="${slfj4.jar.file}" />
+			<classpath path="${google-collection.jar.file}" />
+			<classpath path="${spring-beans.jar.file}" />
+			<classpath path="${spring-core.jar.file}" />
+			<classpath path="${spring-jdbc.jar.file}" />
+			<classpath path="${spring-tx.jar.file}" />
+			<classpath path="${commons-dbcp.jar.file}" />
+			<classpath path="${commons-pool.jar.file}" />
+			<classpath path="${jogg.jar.file}" />
+			<classpath path="${jorbis.jar.file}" />
+			<classpath path="${core.jar.file}" />
+
+			<include name="**/*.java" />
+			<exclude name="**/*Test.java" />
+		</javac>
+	</target>
+
+	<!-- Creates a jar of the compiled code and libs -->
+	<target name="jar" depends="compile">
+		<jar destfile="${build}/${server.jar}">
+			<fileset dir="${build.classes}">
+				<patternset id="classes">
+					<include name="**/*.class" />
+					<exclude name="truco/client/**" />
+					<exclude name="client/**" />
+					<exclude name="org/slf4j/impl/**" />
+				</patternset>
+			</fileset>
+
+			<fileset dir="${build}">
+				<patternset id="version">
+					<include name="version" />
+				</patternset>
+			</fileset>
+		</jar>
+	</target>
+</project>
